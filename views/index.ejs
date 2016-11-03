@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title>Trip List - <%= appName %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <h1>Trip List</h1>
+    <table border="1">
+        <tr>
+            <td>Trip Name</td>
+            <td>Date</td>
+        </tr>
+        <% trips.forEach(function (trip) { %>
+            <tr>
+                <td><%= trip.name %></td>
+                <td><%= trip.date %></td>
+            </tr>
+        <% })%>
+    </table>
   </body>
 </html>
