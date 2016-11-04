@@ -7,16 +7,17 @@ var db = new sqlite3.Database(config.database);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    db.serialize(function() {
-        db.all("SELECT * FROM trip", function(err, rows){
-            if (!err) {
-                res.render('index', {
-                    appName: config.appName,
-                    trips: rows
-                });
-            }
-        });
-    });
+	db.serialize(function() {
+		db.run("PRAGMA foreign_keys = true;");
+		db.all("SELECT * FROM trip", function(err, rows) {
+			if (!err) {
+				res.render('index', {
+					appName: config.appName,
+					trips: rows
+				});
+			}
+		});
+	});
 });
 
 module.exports = router;
