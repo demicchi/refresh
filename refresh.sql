@@ -1,7 +1,8 @@
 CREATE TABLE trip (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT,
-  date TEXT
+  date TEXT,
+  status TEXT
 );
 
 CREATE TABLE member (
