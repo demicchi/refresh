@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Trip Details - <%= appName %></title>
+	<link rel='stylesheet' href='/stylesheets/style.css'/>
+</head>
+<body>
+<h1>Trip Details</h1>
+<table border="1">
+	<tr>
+		<td>Description</td>
+		<td>Payer</td>
+		<td>Amount</td>
+	</tr>
+	<% payments.forEach(function (payment) { %>
+	<tr>
+		<td><a href="#" onclick="editPayment(<%= payment.payment_id %>)"><%= payment.description %></a></td>
+		<td><%= payment.payer_name %></td>
+		<td><%= payment.amount %></td>
+	</tr>
+	<% }) %>
+</table>
+</body>
+</html>
