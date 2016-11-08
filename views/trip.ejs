@@ -11,12 +11,18 @@
 		<td>Description</td>
 		<td>Payer</td>
 		<td>Amount</td>
+		<% members.forEach(function (member) { %>
+		<td><%= member.name %></td>
+		<% }) %>
 	</tr>
 	<% payments.forEach(function (payment) { %>
 	<tr>
 		<td><a href="#" onclick="editPayment(<%= payment.payment_id %>)"><%= payment.description %></a></td>
 		<td><%= payment.payer_name %></td>
 		<td><%= payment.amount %></td>
+		<% payment.defrayers.forEach(function (mark) { %>
+		<td><%= mark %></td>
+		<% }) %>
 	</tr>
 	<% }) %>
 </table>
