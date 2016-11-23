@@ -21,7 +21,7 @@
 		<td><%= payment.payer_name %></td>
 		<td><%= payment.amount %></td>
 		<% payment.defrayers.forEach(function (mark) { %>
-		<td><%= mark %></td>
+		<td><%= mark?"○":"" %></td>
 		<% }) %>
 	</tr>
 	<% }) %>
