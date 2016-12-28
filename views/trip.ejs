@@ -3,8 +3,188 @@
 <head>
 	<title>Trip Details - <%= appName %></title>
 	<link rel='stylesheet' href='/stylesheets/style.css'/>
+	<link rel='stylesheet' href='/stylesheets/jquery-ui.css'/>
+	<link rel='stylesheet' href='/stylesheets/jquery-ui.structure.css'/>
+	<link rel='stylesheet' href='/stylesheets/jquery-ui.theme.css'/>
+	<script src="/jquery-3.1.1.js"></script>
+	<script src="/jquery-ui.js"></script>
+	<script>
+		function setRenameTarget(oldName, memberId) {
+			$(function() {
+				$("#editMemberDialog-oldName").val(oldName);
+				$("#editMemberDialog-memberId").val(memberId);
+				$("#editMemberDialog-error").hide();
+				$("#editMemberDialog").dialog("open");
+			});
+		}
+
+		$(function() {
+			$("#addMemberDialog").dialog({
+				autoOpen: false,
+				modal: true,
+				buttons: {
+					"Add": function() {
+						$("#addMemberDialog input").removeClass("ui-state-error");
+						$("#addMemberDialog-error-message").empty();
+						$("#addMemberDialog-error").hide();
+						if ($("#addMemberDialog-name").val().length > 0) {
+							//TODO:Send Data
+							$("#addMemberDialog input").removeClass("ui-state-error");
+							$(this).dialog("close");
+						} else {
+							$("#addMemberDialog-error-message").html("Name cannot be empty");
+							$("#addMemberDialog-error").show();
+							$("#addMemberDialog-name").addClass("ui-state-error");
+						}
+					},
+					"Cancel": function() {
+						$(this).dialog("close");
+					}
+				},
+				close: function() {
+					$("#addMemberDialog input").val("").removeClass("ui-state-error");
+					$("#addMemberDialog-error-message").empty();
+					$("#addMemberDialog-error").hide();
+				}
+			});
+			$("#addMember").click(function() {
+				$("#addMemberDialog-error").hide();
+				$("#addMemberDialog").dialog("open");
+			});
+
+			$("#editMemberDialog").dialog({
+				autoOpen: false,
+				modal: true,
+				buttons: {
+					"Rename": function() {
+						$("#editMemberDialog input").removeClass("ui-state-error");
+						$("#editMemberDialog-error-message").empty();
+						if ($("#editMemberDialog-newName").val().length > 0) {
+							//TODO:Send Data
+							$("#editMemberDialog input").removeClass("ui-state-error");
+							$(this).dialog("close");
+						} else {
+							$("#editMemberDialog-error-message").html("Name cannot be empty");
+							$("#editMemberDialog-error").show();
+							$("#editMemberDialog-newName").addClass("ui-state-error");
+						}
+					},
+					"Cancel": function() {
+						$(this).dialog("close");
+					}
+				},
+				close: function() {
+					$("#editMemberDialog input").val("").removeClass("ui-state-error");
+					$("#editMemberDialog-error-message").empty();
+					$("#editMemberDialog-error").hide();
+				}
+			});
+
+			$("#addStripDialog").dialog({
+				autoOpen: false,
+				modal: true,
+				buttons: {
+					"Add": function() {
+						$("#addStripDialog input").removeClass("ui-state-error");
+						$("#addStripDialog-error-message").empty();
+						var errmes = [];
+						var errexist = false;
+						if ($("#addStripDialog-description").val().length < 1) {
+							errmes.push("Name cannot be empty");
+							$("#addStripDialog-description").addClass("ui-state-error");
+							errexist = true;
+						}
+						var numCheck = /^[0-9]+$/;
+						if (!numCheck.test($("#addStripDialog-amount").val())) {
+							errmes.push("Amount should be a positive number");
+							$("#addStripDialog-amount").addClass("ui-state-error");
+							errexist = true;
+						}
+						if (errexist) {
+							$("#addStripDialog-error-message").html(errmes.join("<br />"));
+							$("#addStripDialog-error").show();
+						} else {
+							$("#addStripDialog input").removeClass("ui-state-error");
+							$(this).dialog("close");
+							//TODO: Send data
+						}
+					},
+					"Cancel": function() {
+						$(this).dialog("close");
+					}
+				},
+				close: function() {
+					$("#addStripDialog input").val("").removeClass("ui-state-error");
+					$("#addStripDialog-error-message").empty();
+					$("#addStripDialog-error").hide();
+				}
+			});
+			$("#addStrip").click(function() {
+				$("#addStripDialog-error").hide();
+				$("#addStripDialog").dialog("open");
+			});
+		});
+	</script>
 </head>
 <body>
+
+<div id="addMemberDialog" title="New member">
+	<div id="addMemberDialog-error" class="ui-state-error ui-corner-all" style="margin: .3em; padding: .7em;">
+		<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+		<div id="addMemberDialog-error-message"></div>
+	</div>
+	<form>
+		<fieldset>
+			<label for="addMemberDialog-name">Name</label>
+			<input type="text" name="name" id="addMemberDialog-name" class="text ui-widget-content ui-corner-all" /><br />
+		</fieldset>
+	</form>
+</div>
+
+<div id="editMemberDialog" title="Edit member">
+	<div id="editMemberDialog-error" class="ui-state-error ui-corner-all" style="margin: .3em; padding: .7em;">
+		<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+		<div id="editMemberDialog-error-message"></div>
+	</div>
+	<form>
+		<fieldset>
+			<label for="editMemberDialog-oldName">Current Name</label>
+			<input type="text" name="oldName" readonly="readonly" id="editMemberDialog-oldName" class="text ui-widget-content ui-corner-all" /><br />
+			<label for="editMemberDialog-newName">New Name</label>
+			<input type="text" name="name" id="editMemberDialog-newName" class="text ui-widget-content ui-corner-all" /><br />
+			<input type="hidden" name="memberId" id="editMemberDialog-memberId" class="text ui-widget-content ui-corner-all" />
+		</fieldset>
+	</form>
+</div>
+
+<div id="addStripDialog" title="Add a strip">
+	<div id="addStripDialog-error" class="ui-state-error ui-corner-all" style="margin: .3em; padding: .7em;">
+		<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+		<div id="addStripDialog-error-message"></div>
+	</div>
+	<form>
+		<fieldset>
+			<label for="addStripDialog-description">Description</label>
+			<input type="text" name="description" id="addStripDialog-description" class="text ui-widget-content ui-corner-all" /><br />
+			<label for="addStripDialog-payer">Payer</label>
+			<select id="addStripDialog-payer" name="payer" class="ui-widget-content ui-corner-all">
+				<% members.forEach(function (member) { %>
+				<option value="<%= member.id %>" /><%= member.name %></option>
+				<% }) %>
+			</select><br />
+			<label for="addStripDialog-amount">Amount</label>
+			<input type="text" name="amount" id="addStripDialog-amount" class="text ui-widget-content ui-corner-all" /><br />
+			Defrayer<br />
+			<div id="addStripDialog-defrayer">
+				<% members.forEach(function (member) { %>
+				<input type="checkbox" id="addStripDialog-defrayer-<%= member.id %>" />
+				<label for="addStripDialog-defrayer-<%= member.id %>"><%= member.name %></label>
+				<% }) %>
+			</div>
+		</fieldset>
+	</form>
+</div>
+
 <h1>Trip Details</h1>
 <table border="1">
 	<tr>
@@ -12,8 +192,9 @@
 		<td>Payer</td>
 		<td>Amount</td>
 		<% members.forEach(function (member) { %>
-		<td><%= member.name %></td>
+		<td><a href="#" onclick="setRenameTarget('<%= member.name %>', '<%= member.id %>')"><%= member.name %></a></td>
 		<% }) %>
+		<td><a href="#" id="addMember">Add a member</a></td>
 	</tr>
 	<% payments.forEach(function (payment) { %>
 	<tr>
@@ -23,8 +204,10 @@
 		<% payment.defrayers.forEach(function (mark) { %>
 		<td><%= mark?"○":"" %></td>
 		<% }) %>
+		<td>&nbsp;</td>
 	</tr>
 	<% }) %>
 </table>
+<a href="#" id="addStrip">Add a new strip</a>
 </body>
 </html>
