@@ -85,7 +85,7 @@
 				modal: true,
 				buttons: {
 					"Add": function() {
-						$("#addStripDialog input").removeClass("ui-state-error");
+						$("#addStripDialog input, #addStripDialog-defrayer").removeClass("ui-state-error");
 						$("#addStripDialog-error-message").empty();
 						var errmes = [];
 						var errexist = false;
@@ -100,13 +100,29 @@
 							$("#addStripDialog-amount").addClass("ui-state-error");
 							errexist = true;
 						}
+						if ($("#addStripDialog-defrayer input:checkbox:checked").length < 1) {
+							errmes.push("At least 1 defrayer should be checked");
+							$("#addStripDialog-defrayer").addClass("ui-state-error");
+							errexist = true;
+						}
 						if (errexist) {
 							$("#addStripDialog-error-message").html(errmes.join("<br />"));
 							$("#addStripDialog-error").show();
 						} else {
 							$("#addStripDialog input").removeClass("ui-state-error");
+							var sendData = $("#addStripDialogForm").serializeArray();
+							var defrayer = [];
+							$.ajax({
+								url: '/tripupdate',
+								type: 'post',
+								data: sendData,
+								dataType: 'json',
+								success: function(result) {
+									//TODO: Refresh Page
+									console.log(result);
+								}
+							});
 							$(this).dialog("close");
-							//TODO: Send data
 						}
 					},
 					"Cancel": function() {
@@ -114,7 +130,8 @@
 					}
 				},
 				close: function() {
-					$("#addStripDialog input").val("").removeClass("ui-state-error");
+					$("#addStripDialog input, #addStripDialog-defrayer").removeClass("ui-state-error");
+					$("#addStripDialogForm")[0].reset();
 					$("#addStripDialog-error-message").empty();
 					$("#addStripDialog-error").hide();
 				}
@@ -162,14 +179,14 @@
 		<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
 		<div id="addStripDialog-error-message"></div>
 	</div>
-	<form>
+	<form id="addStripDialogForm">
 		<fieldset>
 			<label for="addStripDialog-description">Description</label>
 			<input type="text" name="description" id="addStripDialog-description" class="text ui-widget-content ui-corner-all" /><br />
 			<label for="addStripDialog-payer">Payer</label>
 			<select id="addStripDialog-payer" name="payer" class="ui-widget-content ui-corner-all">
 				<% members.forEach(function (member) { %>
-				<option value="<%= member.id %>" /><%= member.name %></option>
+				<option value="<%= member.id %>" ><%= member.name %></option>
 				<% }) %>
 			</select><br />
 			<label for="addStripDialog-amount">Amount</label>
@@ -177,7 +194,7 @@
 			Defrayer<br />
 			<div id="addStripDialog-defrayer">
 				<% members.forEach(function (member) { %>
-				<input type="checkbox" id="addStripDialog-defrayer-<%= member.id %>" />
+				<input type="checkbox" name="defrayer" id="addStripDialog-defrayer-<%= member.id %>" value="<%= member.id %>"/>
 				<label for="addStripDialog-defrayer-<%= member.id %>"><%= member.name %></label>
 				<% }) %>
 			</div>
